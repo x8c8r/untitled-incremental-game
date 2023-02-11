@@ -1,0 +1,36 @@
+* {
+    font-family: 'Raleway', sans-serif;
+    text-decoration: none;
+}
+
+#rightSection {
+    height: 100%;
+	overflow-x:hidden;
+	overflow-y:auto;
+    margin-right: 0.75rem;
+    text-align: center;
+    float:right;
+    top:0px;
+}
+
+#leftSection {
+    float: left;
+}
+
+#clickCounter {
+    text-align: center;
+}
+
+.title {
+    font-size: 1.5rem;
+}
+.title.big {
+    font-size: 2.5rem;
+}
+
+.thing.locked {
+    opacity: 0;
+}
+.thing.unlocked {
+    opacity: 1;
+}
