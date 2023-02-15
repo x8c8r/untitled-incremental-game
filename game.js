@@ -1,5 +1,3 @@
-// Inspired by Cookie Clicker's source code, that I know way too well
-
 // Helper functions
 function l (element) { return document.getElementById(element);};
 
