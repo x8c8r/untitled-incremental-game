@@ -294,6 +294,7 @@ Market.Create = function () {
 }
 
 Market.UpdatePrices = function () {
+    Things.UpdateGains();
     for (thing of Things.things) {
         l(thing.name + 'Price').textContent = "Price: " + thing.price.toFixed(2);
         l(thing.name + 'Amount').textContent = "Owned: " + thing.amount;
