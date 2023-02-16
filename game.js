@@ -95,7 +95,7 @@ Upgrades.Upgrade = function (name, desc, price, type, visible = false) {
 
         Economy.titles -= this.price;
         this.owned = true;
-        Market.UpdatePrices();
+        Market.Update();
     }
 }
 
@@ -141,7 +141,7 @@ Things.Thing = function (name, desc, basePrice, baseGain, visible = false) {
         this.amount += 1;
         this.price = this.basePrice * Math.pow(1.25, this.amount);
 
-        Market.UpdatePrices();
+        Market.Update();
     }
 }
 
@@ -207,22 +207,29 @@ Market.Create = function () {
         title.classList.add("title");
         title.textContent = thing.name;
 
-        var desc = document.createElement('div');
+        var desc = document.createElement('span');
         desc.textContent = thing.desc;
 
         var seperator = document.createElement('hr');
         seperator.classList.add("marketSeperator");
 
-        var gain = document.createElement('div');
-        gain.textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
+        var seperator2 = document.createElement('hr');
+        seperator2.classList.add("marketSeperator");
+
+        var gain = document.createElement('span');
+        // gain.textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
         gain.id = thing.name + 'Gain';
 
-        var price = document.createElement('div');
-        price.textContent = "Price: " + thing.price.toFixed(2);
+        var totalGain = document.createElement('span');
+        // totalGain.textContent = thing.amount + " of " + thing.name.toLowerCase() + " is thinking of " + thing.amount * thing.gain + " titles per second";
+        totalGain.id = thing.name + 'TotalGain';
+
+        var price = document.createElement('span');
+        // price.textContent = "Price: " + thing.price.toFixed(2);
         price.id = thing.name + 'Price';
 
-        var owned = document.createElement('div');
-        owned.textContent = "Owned: " + thing.amount;
+        var owned = document.createElement('span');
+        // owned.textContent = "Owned: " + thing.amount;
         owned.id = thing.name + 'Amount';
 
         var buyBtn = document.createElement('button');
@@ -232,9 +239,17 @@ Market.Create = function () {
         thingDiv.appendChild(title);
         thingDiv.appendChild(desc);
         thingDiv.appendChild(seperator);
+
         thingDiv.appendChild(gain);
+        thingDiv.appendChild(seperator2);
+        
+        thingDiv.appendChild(totalGain);
+        thingDiv.appendChild(document.createElement('br'));
         thingDiv.appendChild(price);
+        thingDiv.appendChild(document.createElement('br'));
         thingDiv.appendChild(owned);
+        thingDiv.appendChild(document.createElement('br'));
+        
         thingDiv.appendChild(buyBtn);
 
         thingDiv.classList.add("thing");
@@ -293,12 +308,13 @@ Market.Create = function () {
     }
 }
 
-Market.UpdatePrices = function () {
+Market.Update = function () {
     Things.UpdateGains();
     for (thing of Things.things) {
         l(thing.name + 'Price').textContent = "Price: " + thing.price.toFixed(2);
         l(thing.name + 'Amount').textContent = "Owned: " + thing.amount;
         l(thing.name + 'Gain').textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
+        l(thing.name + 'TotalGain').textContent = thing.amount + " of " + thing.name.toLowerCase() + " is thinking of " + (thing.amount * thing.gain).toFixed(2) + " titles per second";
     }
 }
 
@@ -315,6 +331,8 @@ Game.Init = function () {
     Upgrades.Create();
     Things.Create();
     Market.Create();
+
+    Market.Update();
 
     l('clickButton').addEventListener("click", function (ev) { Game.Click(ev); });
     l('clickButton').addEventListener("keydown", function (ev) { if (ev) ev.preventDefault() });
@@ -344,8 +362,12 @@ Game.Load = function () {
     }
 
     Game.Draw = function () {
-        document.getElementById("clickCounter").innerHTML = Economy.titles.toFixed(2);
-
+        l("clickCounter").innerHTML = Economy.titles.toFixed(2);
+        Economy.TPS = 0;
+        for(thing of Things.things) {
+            Economy.TPS += thing.gain * thing.amount;
+        }
+        l("tpsCounter").textContent = Economy.TPS.toFixed(2) + " TPS";
         for (var thing of Things.things) {
             var classes = "thing";
             if (Economy.titles >= thing.basePrice || thing.amount >= 1 || thing.visible) {
