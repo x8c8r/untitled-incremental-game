@@ -61,14 +61,14 @@ Market
     opacity: 1;
 }
 
-.upgrade.owned {
+.upgrade.owned, .upgrade.locked {
     display: none;
 }
-.upgrade.unlocked {
-    opacity: 1;
-}
-.upgrade.locked {
+.upgrade.cantBuy.unlocked {
     opacity: 0.5;
+}
+.upgrade.canBuy.unlocked {
+    opacity: 1;
 }
 
 /*

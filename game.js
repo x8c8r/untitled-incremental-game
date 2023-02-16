@@ -95,6 +95,7 @@ Upgrades.Upgrade = function (name, desc, price, type, visible = false) {
 
         Economy.titles -= this.price;
         this.owned = true;
+        Market.UpdatePrices();
     }
 }
 
@@ -103,7 +104,7 @@ Upgrades.Create = function () {
     new Upgrades.Upgrade('Thinker 2', 'Speeds up Thinkers in 2 times', 250, Upgrades.types.Thing);
 
     // Clicks
-    new Upgrades.Upgrade('Sheet of 100 existing titles', 'Makes clicking 3 times as effecient', 500, Upgrades.types.Click, true);
+    new Upgrades.Upgrade('Sheet of 100 existing titles', 'Makes clicking 3 times as effecient', 500, Upgrades.types.Click);
 }
 
 
@@ -214,6 +215,7 @@ Market.Create = function () {
 
         var gain = document.createElement('div');
         gain.textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
+        gain.id = thing.name + 'Gain';
 
         var price = document.createElement('div');
         price.textContent = "Price: " + thing.price.toFixed(2);
@@ -295,6 +297,7 @@ Market.UpdatePrices = function () {
     for (thing of Things.things) {
         l(thing.name + 'Price').textContent = "Price: " + thing.price.toFixed(2);
         l(thing.name + 'Amount').textContent = "Owned: " + thing.amount;
+        l(thing.name + 'Gain').textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
     }
 }
 
@@ -360,15 +363,15 @@ Game.Load = function () {
 
         for (upgrade of Upgrades.upgrades) {
             var classes = "upgrade";
-            if (Economy.titles >= upgrade.price && !upgrade.owned && upgrade.visible) {
-                classes += " visible";
+            if (Economy.titles >= upgrade.price || upgrade.visible) {
+                classes += " unlocked";
+                upgrade.visible = true;
             }
-            else if (upgrade.owned) {
-                classes += " owned";
-            }
-            else {
-                classes += " locked";
-            }
+            else classes += " locked";
+
+            if (upgrade.owned) classes += " owned";
+            if(Economy.titles < upgrade.price) classes += " cantBuy";
+            if (Economy.titles >= upgrade.price) classes += " canBuy";
             upgrade.l.className = classes;
         }
     }
