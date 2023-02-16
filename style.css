@@ -1,36 +1,70 @@
+/*
+General Style
+*/
+
 * {
     font-family: 'Raleway', sans-serif;
     text-decoration: none;
 }
 
 #rightSection {
-    height: 100%;
+    width: 15rem;
 	overflow-x:hidden;
-	overflow-y:auto;
     margin-right: 0.75rem;
     text-align: center;
     float:right;
     top:0px;
 }
 
+#marketThings, #marketUpgrades {
+    overflow-y:auto;
+    height: 15rem;
+}
+
 #leftSection {
     float: left;
 }
 
+#clickCounter, #clickCounterTitle {
+    display: inline-block;
+    /* text-align: center; */
+}
 #clickCounter {
-    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .title {
+    font-size: 1.15rem;
+}
+.title.medium {
     font-size: 1.5rem;
 }
 .title.big {
-    font-size: 2.5rem;
+    font-size: 2.0rem;
+}
+
+/*
+Market
+*/
+
+.marketSeperator {
+    width: 3.5rem;
 }
 
 .thing.locked {
-    opacity: 0;
+    display: none;
+}
+.thing.next {
+    opacity: 0.5;
 }
 .thing.unlocked {
     opacity: 1;
+}
+
+/*
+Info Menu
+*/
+#bottomBar {
+    position: fixed;
+    bottom: 0;
 }
