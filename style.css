@@ -18,7 +18,7 @@ General Style
 
 #marketThings, #marketUpgrades {
     overflow-y:auto;
-    height: 15rem;
+    height: 13.5rem;
 }
 
 #leftSection {
@@ -59,6 +59,16 @@ Market
 }
 .thing.unlocked {
     opacity: 1;
+}
+
+.upgrade.owned {
+    display: none;
+}
+.upgrade.unlocked {
+    opacity: 1;
+}
+.upgrade.locked {
+    opacity: 0.5;
 }
 
 /*
