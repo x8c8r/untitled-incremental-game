@@ -8,17 +8,12 @@ General Style
 }
 
 #rightSection {
-    width: 15rem;
+    width: 30rem;
 	overflow-x:hidden;
     margin-right: 0.75rem;
-    text-align: center;
+    text-align: center; 
     float:right;
     top:0px;
-}
-
-#marketThings, #marketUpgrades {
-    overflow-y:auto;
-    height: 13.5rem;
 }
 
 #leftSection {
@@ -27,7 +22,7 @@ General Style
 
 #clickCounter, #clickCounterTitle {
     display: inline-block;
-    /* text-align: center; */
+    text-align: center;
 }
 #tpsCounter {
     margin-bottom: 1rem;
@@ -42,6 +37,9 @@ General Style
 .title.big {
     font-size: 2.0rem;
 }
+.title.bold {
+    font-weight: bold;
+}
 
 /*
 Market
@@ -50,14 +48,17 @@ Market
 .marketSeperator {
     width: 3.5rem;
 }
+.marketSeperator.big {
+    width: 7.5rem;
+}
 
 .thing.locked {
     display: none;
 }
-.thing.next {
+.thing.unlocked.cantBuy {
     opacity: 0.5;
 }
-.thing.unlocked {
+.thing.unlocked.canBuy {
     opacity: 1;
 }
 
@@ -71,10 +72,40 @@ Market
     opacity: 1;
 }
 
+.product {
+    display: block;
+}
+
+#marketThings, #marketUpgrades {
+    width:85%;
+    overflow-y:auto;
+    height: 20.5rem;
+    margin-left: 1rem;
+    display: inline-block;
+}
+
 /*
-Info Menu
+Tabs
 */
-#bottomBar {
-    position: fixed;
-    bottom: 0;
+
+#topBar {
+    width: auto;
+    display: block;
+}
+#menuTab {
+    text-align: center;
+}
+
+.menuTitle {
+    display: inline-block;
+    user-select: none;
+    border: solid;
+    padding: 0.25rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+.menuTitle.active {
+    background-color: black;
+    color: white;
+    border: solid white;
 }

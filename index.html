@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Untitled Incremental Game</title>
+    <title>Untitled Incremental Clicker</title>
     <script type="text/javascript" src="game.js"></script>
-    <link rel="stylesheet" href="style.css"></style>
+    <link rel="stylesheet" href="style.css">
+    </style>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,39 +14,74 @@
 </head>
 
 <body>
-<div id="game">
-    <div id="leftSection">
-        <div id="clickCounterTitle" style="font-size:1.5rem;text-align:center;">Titles</div>
-        <br>
-        <span id="clickCounter" style="font-size:1.5rem">0</span>
-        <br>
-        <span id="tpsCounter" style="font-size: 1.25rem;">0 TPS</span>
-        <br>
-        <button id="clickButton">Think of a title</button>
+    <div id="game">
 
-    <div id="bottomBar">
-            <div id="infoMenu">
-                <span>Version 1.03 | Created by x8c8r</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="rightSection">
-        <div id="market">
-            <div class="title big">Market</div>
-
-            <hr>
-            <div class="title medium">Things</div>
-            <hr>
-            <div id="marketThings"></div>
-
-            <hr>
-            <div class="title medium">Upgrades</div>
-            <hr>
-            <div id="marketUpgrades"></div>
+        <div id="topBar">
+            <span id="marketTabButton" class="title medium bold menuTitle">Market</span>
+            <span id="infoTabButton" class="title medium bold menuTitle">Info</span>
         </div>
         <hr>
+
+        <div id="leftSection">
+            <div id="clickCounterTitle" style="font-size:1.5rem;text-align:center;">Titles</div>
+            <br>
+            <span id="clickCounter" style="font-size:1.5rem">0</span>
+            <br>
+            <span id="tpsCounter" style="font-size: 1.25rem;">0 TPS</span>
+            <br>
+            <button id="clickButton">Think of a title</button>
+        </div>
+
+        <div id="rightSection">
+
+            <div id="marketTabContent" class="menuTab">
+                <div id="market">
+                    <div class="title big">Market</div>
+                    <hr class="marketSeperator big">
+
+                    <span id="marketThingsTabButton" class="title medium bold menuTitle">Things</span>
+                    <span id="marketUpgradesTabButton" class="title medium bold menuTitle">Upgrades</span>
+
+                    <div id="marketThingsTabContent">
+                        <hr class="marketSeperator big">
+                        <div class="title medium">Things</div>
+                        <hr class="marketSeperator big">
+                        <div id="marketThings"></div>
+                    </div>
+
+                    <div id="marketUpgradesTabContent">
+                        <hr class="marketSeperator big">
+                        <div class="title medium">Upgrades</div>
+                        <hr class="marketSeperator big">
+                        <div id="marketUpgrades"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="infoTabContent" class="menuTab">
+                <div id="infoMenu">
+                    <span class="title big bold">Untitled Incremental Clicker</span> <br>
+                    <span>Version 1.1 | Created by x8c8r</span>
+
+                    <div>
+                        To be added
+                        <br><br>
+                        &bull; Saving/Loading <br>
+                        &bull; Dark Theme <br>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="bottomBar">
+        </div>
     </div>
-</div>
+
+
+
+    </div>
 </body>
+
 </html>

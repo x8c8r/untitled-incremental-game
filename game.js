@@ -1,8 +1,16 @@
 // Helper functions
 function l(element) { return document.getElementById(element); };
 
+function returnByName(list, name) {
+    var res=[]
+    list.filter(function (t) {
+        if(t.name === name) res.push(t);
+    });
+    return res;
+}
+
 // Initialize Objects
-var Meta = {};
+var UI = {};
 var Time = {};
 var Economy = {};
 var Upgrades = {};
@@ -11,18 +19,85 @@ var Market = {};
 var Game = {};
 
 /*---------
-META
+UI
 ---------*/
 
-Meta.UI = {};
-Meta.UI.InfoMenuOn = false;
-Meta.UI.ToggleInfoMenu = function () {
-    Meta.InfoMenuOn = !Meta.InfoMenuOn;
-    l('infoMenu').style.display = (Meta.InfoMenuOn ? "block" : "none");
+UI.tabs = [];
+UI.tabAmount = 0;
+UI.Tab = function(name, buttonId, contentId) {
+    this.name = name;
+
+    this.id = UI.tabAmount;
+    UI.tabAmount++;
+
+    this.button = l(buttonId);
+    this.content = l(contentId);
+
+    UI.tabs.push(this);
 }
 
-Meta.UI.Init = function () {
-    l('infoMenu').style.display = "none";
+UI.tabGroups = [];
+UI.tabGroupAmounts = 0;
+UI.TabGroup = function(name, tabs) {
+    this.name = name;
+
+    this.id = UI.tabGroupAmounts;
+    UI.tabGroupAmounts++;
+
+    this.tabs = [];
+    for (tab of tabs) {
+        this.tabs.push(tab);
+    }
+
+    UI.tabGroups.push(this);
+}
+
+UI.TabGroup.prototype.ToggleTab = function(tabContent, ev) {
+    var tabEl;
+    var tabBut;
+
+    if (tabContent != undefined) tabEl = tabContent;
+    else tabEl = this.tabs[0].content;
+
+    for (i of this.tabs) {
+        if (i.content == tabEl) {
+            tabBut = i.button;
+            continue;
+        }
+        i.content.style.display = "none";
+        i.button.classList = "title medium bold menuTitle";
+    }
+
+    tabEl.style.display = "block";
+    tabBut.classList = "title medium bold menuTitle active";
+}
+
+UI.tabByName = function(name) {
+    return returnByName(UI.tabs, name)[0];
+}
+
+UI.tabByNameFromGroup = function(group, name) {
+    return returnByName(group, name)[0];
+}
+
+UI.tabGroupByName = function(name) {
+    return returnByName(UI.tabGroups, "Main")[0];
+}
+
+UI.Init = function () {
+    // Main topbar buttons
+    var tabGroupMain = new UI.TabGroup("Main", [
+        new UI.Tab("Market", "marketTabButton", "marketTabContent"),
+        new UI.Tab("Info", "infoTabButton", "infoTabContent"),
+    ]);
+
+    for(const tab of tabGroupMain.tabs) {
+        tab.button.addEventListener("click", function(ev) {
+            tabGroupMain.ToggleTab(tab.content, ev);
+        });
+    }
+
+    tabGroupMain.ToggleTab(); // Make it so all tabs don't get shown at once, and only the first one
 }
 
 /*---------
@@ -47,9 +122,11 @@ ECONOMY
 ---------*/
 
 Economy.titles = 0;
+Economy.totalTitles = 0;
 
 Economy.Earn = function (amount) {
     Economy.titles += amount;
+    Economy.totalTitles += amount;
 }
 
 Economy.Lose = function (amount) {
@@ -62,13 +139,6 @@ Economy.Lose = function (amount) {
 UPGRADES
 ---------*/
 
-/*
-Not yet implemented ;)
-
-List of ones I want to add:
-- Thinker 2 - Speeds up Thinkers in 2 times (idea by crapbass)
-- Sheet of 100 existing titles - Makes clicking 3 times as effective
-*/
 Upgrades.upgrades = [];
 Upgrades.amount = 0;
 Upgrades.types = {
@@ -186,6 +256,20 @@ Things.UpdateGains = function () {
 /*---------
 MARKET
 ---------*/
+Market.InitUI = function() {
+    Market.Tabs = new UI.TabGroup("Market", [
+        new UI.Tab("Things", "marketThingsTabButton", "marketThingsTabContent"),
+        new UI.Tab("Upgrades", "marketUpgradesTabButton", "marketUpgradesTabContent"),
+    ]);
+
+    for(const tab of Market.Tabs.tabs) {
+        tab.button.addEventListener("click", function(ev) {
+            Market.Tabs.ToggleTab(tab.content, ev);
+        });
+    }
+
+    Market.Tabs.ToggleTab();
+}
 
 Market.ClickBuyThing = function (thing) {
     Things.things[thing].buy();
@@ -217,19 +301,15 @@ Market.Create = function () {
         seperator2.classList.add("marketSeperator");
 
         var gain = document.createElement('span');
-        // gain.textContent = "Thinks of " + thing.gain.toFixed(2) + " titles per second";
         gain.id = thing.name + 'Gain';
 
         var totalGain = document.createElement('span');
-        // totalGain.textContent = thing.amount + " of " + thing.name.toLowerCase() + " is thinking of " + thing.amount * thing.gain + " titles per second";
         totalGain.id = thing.name + 'TotalGain';
 
         var price = document.createElement('span');
-        // price.textContent = "Price: " + thing.price.toFixed(2);
         price.id = thing.name + 'Price';
 
         var owned = document.createElement('span');
-        // owned.textContent = "Owned: " + thing.amount;
         owned.id = thing.name + 'Amount';
 
         var buyBtn = document.createElement('button');
@@ -252,13 +332,16 @@ Market.Create = function () {
         
         thingDiv.appendChild(buyBtn);
 
-        thingDiv.classList.add("thing");
+        thingDiv.appendChild(document.createElement('br'));
+
         thingDiv.id = "thing" + thing.id;
+
+        thingDiv.classList.add("thing");
+        thingDiv.classList.add("product");
         thingDiv.classList.add("locked");
 
 
         l('marketThings').appendChild(thingDiv);
-        l('marketThings').appendChild(document.createElement('br'));
     }
 
     for (thing of Things.things) {
@@ -306,6 +389,8 @@ Market.Create = function () {
 
         upgradel.addEventListener("click", function (b) { return function (e) { Market.ClickBuyUpgrade(b); e.preventDefault(); }; }(upgrade.id));
     }
+
+    Market.InitUI();
 }
 
 Market.Update = function () {
@@ -327,7 +412,7 @@ Game.Init = function () {
     Game.visible = true;
     Game.ready = 0;
 
-    Meta.UI.Init();
+    UI.Init();
     Upgrades.Create();
     Things.Create();
     Market.Create();
@@ -368,23 +453,30 @@ Game.Load = function () {
             Economy.TPS += thing.gain * thing.amount;
         }
         l("tpsCounter").textContent = Economy.TPS.toFixed(2) + " TPS";
-        for (var thing of Things.things) {
-            var classes = "thing";
-            if (Economy.titles >= thing.basePrice || thing.amount >= 1 || thing.visible) {
+
+        for (const thing of Things.things) {
+            var classes = "thing product";
+            
+            var prevThingUnlocked;
+            if (thing.id === 0) prevThingUnlocked = false;
+            else prevThingUnlocked = Things.things[thing.id - 1].visible;
+
+
+            if (Economy.titles >= thing.price - (thing.price/100)*25 || thing.amount >= 1 || thing.visible) {
                 classes += " unlocked";
                 thing.visible = true;
-            }
-            else if (Things.things[thing.id - 1].visible) {
-                classes += " next";
             }
             else {
                 classes += " locked";
                 thing.visible = false;
             }
+
+            if (Economy.titles >= thing.price) classes += " canBuy";
+            if (Economy.titles < thing.price) classes += " cantBuy";
             thing.l.className = classes;
         }
 
-        for (upgrade of Upgrades.upgrades) {
+        for (const upgrade of Upgrades.upgrades) {
             var classes = "upgrade";
             if (Economy.titles >= upgrade.price || upgrade.visible) {
                 classes += " unlocked";
