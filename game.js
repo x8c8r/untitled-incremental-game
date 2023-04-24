@@ -9,7 +9,11 @@ function returnByName(list, name) {
     return res;
 }
 
+// i stole this from somewhere (http://www.webtoolkit.info/)
+var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=Base64._utf8_encode(r);f<r.length;)e=r.charCodeAt(f++),t=r.charCodeAt(f++),o=r.charCodeAt(f++),a=e>>2,h=(3&e)<<4|t>>4,d=(15&t)<<2|o>>6,C=63&o,isNaN(t)?d=C=64:isNaN(o)&&(C=64),c=c+this._keyStr.charAt(a)+this._keyStr.charAt(h)+this._keyStr.charAt(d)+this._keyStr.charAt(C);return c},decode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=r.replace(/[^A-Za-z0-9\+\/\=]/g,"");f<r.length;)a=this._keyStr.indexOf(r.charAt(f++)),h=this._keyStr.indexOf(r.charAt(f++)),d=this._keyStr.indexOf(r.charAt(f++)),C=this._keyStr.indexOf(r.charAt(f++)),e=a<<2|h>>4,t=(15&h)<<4|d>>2,o=(3&d)<<6|C,c+=String.fromCharCode(e),64!=d&&(c+=String.fromCharCode(t)),64!=C&&(c+=String.fromCharCode(o));return Base64._utf8_decode(c)},_utf8_encode:function(r){r=r.replace(/\r\n/g,"\n");for(var e="",t=0;t<r.length;t++){var o=r.charCodeAt(t);o<128?e+=String.fromCharCode(o):o>127&&o<2048?(e+=String.fromCharCode(o>>6|192),e+=String.fromCharCode(63&o|128)):(e+=String.fromCharCode(o>>12|224),e+=String.fromCharCode(o>>6&63|128),e+=String.fromCharCode(63&o|128))}return e},_utf8_decode:function(r){for(var e="",t=0,o=c1=c2=0;t<r.length;)(o=r.charCodeAt(t))<128?(e+=String.fromCharCode(o),t++):o>191&&o<224?(e+=String.fromCharCode((31&o)<<6|63&(c2=r.charCodeAt(t+1))),t+=2):(e+=String.fromCharCode((15&o)<<12|(63&(c2=r.charCodeAt(t+1)))<<6|63&(c3=r.charCodeAt(t+2))),t+=3);return e}};
+
 // Initialize Objects
+var Save = {};
 var UI = {};
 var Time = {};
 var Economy = {};
@@ -17,6 +21,45 @@ var Upgrades = {};
 var Things = {};
 var Market = {};
 var Game = {};
+
+/*---------
+SAVE
+---------*/
+Save.getThings = function() {
+    var things = [];
+    for (thing of Things.things) {
+        var thingie = {
+            name: thing.name,
+            amount: thing.amount,
+            price: thing.price,
+            visible: thing.visible
+        }
+        things.push(JSON.stringify(thingie));
+    }
+    return things;
+}
+
+Save.getUpgrades = function() {
+    var upgrades = [];
+    for (upgrade of Upgrades.upgrades) {
+        var upgradey = {
+            name: upgrade.name,
+            owned: upgrade.owned,
+            visible: upgrade.visible
+        }
+        upgrades.push(JSON.stringify(upgradey));
+    }
+    return upgrades;
+}
+
+Save.getEconomy = function() {
+    var economy = {
+        titles: Economy.titles,
+        totalTitles: Economy.totalTitles
+    }
+    return economy;
+}
+
 
 /*---------
 UI
@@ -133,8 +176,6 @@ Economy.Lose = function (amount) {
     Economy.titles -= amount;
 }
 
-
-
 /*---------
 UPGRADES
 ---------*/
@@ -219,6 +260,7 @@ Things.Thing = function (name, desc, basePrice, baseGain, visible = false) {
 Credits for direct/indirect building ideas:
 zTags - Artificial Intelligence
 */
+
 Things.Create = function () {
     new Things.Thing('Thinker', 'Thinks of titles for you', 15, 0.1, true);
     new Things.Thing('"Friends"', "Let your contrac-... buddies think for you", 150, 1);
