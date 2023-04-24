@@ -349,6 +349,7 @@ Upgrades.Upgrade = function (name, desc, price, type, visible = false) {
 Upgrades.Create = function () {
     // Things
     new Upgrades.Upgrade('Thinker 2', 'Speeds up Thinkers in 2 times', 250, Upgrades.types.Thing);
+    // new Upgrades.Upgrade('Dynamic Duo', 'Increases TPS by 1% for every 10 Thinkers', 1000000, Upgrades.types.Thing);
 
     // Clicks
     new Upgrades.Upgrade('Sheet of 100 existing titles', 'Makes clicking 3 times as effecient', 500, Upgrades.types.Click);
@@ -420,6 +421,8 @@ Things.UpdateGains = function () {
                         case "Thinker 2": 
                             mult *= 3;
                             break;
+                        case "Dynamic Duo":
+                            mult += Math.round(thing.amount/10) * 0.1;
                         default:
                             continue;
                     }
@@ -539,6 +542,9 @@ Market.Create = function () {
         title.classList.add("title");
         title.textContent = upgrade.name;
 
+        let desc = document.createElement('span');
+        desc.textContent = upgrade.desc;
+
         let seperator = document.createElement('hr');
         seperator.classList.add("marketSeperator");
 
@@ -551,6 +557,7 @@ Market.Create = function () {
         buyBtn.id = upgrade.name + 'BuyBtn';
 
         upgradeDiv.appendChild(title);
+        upgradeDiv.appendChild(desc);
         upgradeDiv.appendChild(seperator);
         upgradeDiv.appendChild(price);
         upgradeDiv.appendChild(buyBtn);
@@ -610,8 +617,6 @@ Game.Init = function () {
     });
 
     Save.load();
-
-    
 }
 
 Game.Load = function () {
@@ -675,8 +680,6 @@ Game.Load = function () {
             if (Economy.titles >= upgrade.price) classes += " canBuy";
             upgrade.l.className = classes;
         }
-
-        UI.UpdatePopups();
     }
 
     let profit = 0;
@@ -695,6 +698,8 @@ Game.Load = function () {
         }
 
         Economy.Earn(profit * Time.deltaTime);
+
+        UI.UpdatePopups(); // No more popup spam ;3
     }
 
     Game.ready = 1;
