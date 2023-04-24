@@ -107,6 +107,7 @@ Save.load = function() {
 
     for (thing of save.things) {
         let t = returnByName(Things.things, thing.name)[0];
+        if (t === undefined) return;
         t.amount = thing.amount;
         t.price = thing.price;
         t.visible = thing.visible;
@@ -114,6 +115,7 @@ Save.load = function() {
 
     for (upgrade of save.upgrades) {
         let u = returnByName(Upgrades.upgrades, upgrade.name)[0];
+        if (u === undefined) return;
         u.owned = upgrade.owned;
         u.visible = upgrade.visible;
     }
@@ -403,7 +405,9 @@ Things.Create = function () {
     new Things.Thing('"Friends"', "Let your contrac-... buddies think for you", 150, 1);
     new Things.Thing('Office', 'Make a bunch of office clerk think of new titles', 1000, 15);
     new Things.Thing('Cyber Thinker', 'It\'s like the Thinker, but smarter', 5000, 35);
-    new Things.Thing('Artificial Intelligence', 'Ask a highly intelligent AI to think of new titles', 100000, 100);
+    new Things.Thing('Title Analysis Center', 'Analyze which titles work the best, and think of new ones', 100000, 50);
+    new Things.Thing('Artificial Intelligence', 'Ask a highly intelligent AI to think of new titles', 1500000, 75);
+    new Things.Thing('Title Generator', 'Combined force of a machine learning algorithm and an AI generating new titles', 100000000, 125);
 }
 
 Things.UpdateGains = function () {
@@ -648,10 +652,10 @@ Game.Load = function () {
         for (const thing of Things.things) {
             let classes = "thing product";
             
-            let prevThingUnlocked;
-            if (thing.id === 0) prevThingUnlocked = false;
-            else prevThingUnlocked = Things.things[thing.id - 1].visible;
-
+            if (Things.things[thing.id+1] !== undefined) {
+                let nextThing = Things.things[thing.id+1];
+                if (nextThing.visible) thing.visible = true;
+            }
 
             if (Economy.titles >= thing.price - (thing.price/100)*25 || thing.amount >= 1 || thing.visible) {
                 classes += " unlocked";
