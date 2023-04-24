@@ -7,6 +7,15 @@ General Style
     text-decoration: none;
 }
 
+#game {
+	position:absolute;
+	left:0px;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	overflow:hidden;
+}
+
 #rightSection {
     width: 30rem;
 	overflow-x:hidden;
@@ -17,6 +26,7 @@ General Style
 }
 
 #leftSection {
+    margin-left: 0.5rem;
     float: left;
 }
 
@@ -89,6 +99,7 @@ Tabs
 */
 
 #topBar {
+    margin-left: 0.5rem;
     width: auto;
     display: block;
 }
@@ -99,13 +110,33 @@ Tabs
 .menuTitle {
     display: inline-block;
     user-select: none;
-    border: solid;
+    border: solid rgb(160, 160, 160);
     padding: 0.25rem;
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
 }
 .menuTitle.active {
-    background-color: black;
-    color: white;
-    border: solid white;
+    border: solid black;
+}
+.menuTitle:hover:not(.active) {
+    border: solid rgb(75, 75, 75);
+}
+
+/*
+Popups
+*/
+
+#popups {
+    position:absolute;
+    bottom:0px;
+}
+.popup {
+    width: 35rem;
+    white-space: pre-line;
+    overflow-y: hidden;
+    display: block;
+    position: relative;
+    padding-bottom:8px;
+    border: solid black;
+    margin: 0.5rem;
 }

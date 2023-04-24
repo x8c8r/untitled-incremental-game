@@ -2,62 +2,123 @@
 function l(element) { return document.getElementById(element); };
 
 function returnByName(list, name) {
-    var res=[]
+    let res=[]
     list.filter(function (t) {
         if(t.name === name) res.push(t);
     });
     return res;
 }
 
+function returnById(list, id) {
+    let res=[]
+    list.filter(function (t) {
+        if(t.id === id) res.push(t);
+    });
+    return res;
+}
+
 // i stole this from somewhere (http://www.webtoolkit.info/)
-var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=Base64._utf8_encode(r);f<r.length;)e=r.charCodeAt(f++),t=r.charCodeAt(f++),o=r.charCodeAt(f++),a=e>>2,h=(3&e)<<4|t>>4,d=(15&t)<<2|o>>6,C=63&o,isNaN(t)?d=C=64:isNaN(o)&&(C=64),c=c+this._keyStr.charAt(a)+this._keyStr.charAt(h)+this._keyStr.charAt(d)+this._keyStr.charAt(C);return c},decode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=r.replace(/[^A-Za-z0-9\+\/\=]/g,"");f<r.length;)a=this._keyStr.indexOf(r.charAt(f++)),h=this._keyStr.indexOf(r.charAt(f++)),d=this._keyStr.indexOf(r.charAt(f++)),C=this._keyStr.indexOf(r.charAt(f++)),e=a<<2|h>>4,t=(15&h)<<4|d>>2,o=(3&d)<<6|C,c+=String.fromCharCode(e),64!=d&&(c+=String.fromCharCode(t)),64!=C&&(c+=String.fromCharCode(o));return Base64._utf8_decode(c)},_utf8_encode:function(r){r=r.replace(/\r\n/g,"\n");for(var e="",t=0;t<r.length;t++){var o=r.charCodeAt(t);o<128?e+=String.fromCharCode(o):o>127&&o<2048?(e+=String.fromCharCode(o>>6|192),e+=String.fromCharCode(63&o|128)):(e+=String.fromCharCode(o>>12|224),e+=String.fromCharCode(o>>6&63|128),e+=String.fromCharCode(63&o|128))}return e},_utf8_decode:function(r){for(var e="",t=0,o=c1=c2=0;t<r.length;)(o=r.charCodeAt(t))<128?(e+=String.fromCharCode(o),t++):o>191&&o<224?(e+=String.fromCharCode((31&o)<<6|63&(c2=r.charCodeAt(t+1))),t+=2):(e+=String.fromCharCode((15&o)<<12|(63&(c2=r.charCodeAt(t+1)))<<6|63&(c3=r.charCodeAt(t+2))),t+=3);return e}};
+let Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=Base64._utf8_encode(r);f<r.length;)e=r.charCodeAt(f++),t=r.charCodeAt(f++),o=r.charCodeAt(f++),a=e>>2,h=(3&e)<<4|t>>4,d=(15&t)<<2|o>>6,C=63&o,isNaN(t)?d=C=64:isNaN(o)&&(C=64),c=c+this._keyStr.charAt(a)+this._keyStr.charAt(h)+this._keyStr.charAt(d)+this._keyStr.charAt(C);return c},decode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=r.replace(/[^A-Za-z0-9\+\/\=]/g,"");f<r.length;)a=this._keyStr.indexOf(r.charAt(f++)),h=this._keyStr.indexOf(r.charAt(f++)),d=this._keyStr.indexOf(r.charAt(f++)),C=this._keyStr.indexOf(r.charAt(f++)),e=a<<2|h>>4,t=(15&h)<<4|d>>2,o=(3&d)<<6|C,c+=String.fromCharCode(e),64!=d&&(c+=String.fromCharCode(t)),64!=C&&(c+=String.fromCharCode(o));return Base64._utf8_decode(c)},_utf8_encode:function(r){r=r.replace(/\r\n/g,"\n");for(var e="",t=0;t<r.length;t++){var o=r.charCodeAt(t);o<128?e+=String.fromCharCode(o):o>127&&o<2048?(e+=String.fromCharCode(o>>6|192),e+=String.fromCharCode(63&o|128)):(e+=String.fromCharCode(o>>12|224),e+=String.fromCharCode(o>>6&63|128),e+=String.fromCharCode(63&o|128))}return e},_utf8_decode:function(r){for(var e="",t=0,o=c1=c2=0;t<r.length;)(o=r.charCodeAt(t))<128?(e+=String.fromCharCode(o),t++):o>191&&o<224?(e+=String.fromCharCode((31&o)<<6|63&(c2=r.charCodeAt(t+1))),t+=2):(e+=String.fromCharCode((15&o)<<12|(63&(c2=r.charCodeAt(t+1)))<<6|63&(c3=r.charCodeAt(t+2))),t+=3);return e}};
 
 // Initialize Objects
-var Save = {};
-var UI = {};
-var Time = {};
-var Economy = {};
-var Upgrades = {};
-var Things = {};
-var Market = {};
-var Game = {};
+let Save = {};
+let UI = {};
+let Time = {};
+let Economy = {};
+let Upgrades = {};
+let Things = {};
+let Market = {};
+let Game = {};
 
 /*---------
 SAVE
 ---------*/
 Save.getThings = function() {
-    var things = [];
+    let things = [];
     for (thing of Things.things) {
-        var thingie = {
+        let thingie = {
             name: thing.name,
             amount: thing.amount,
             price: thing.price,
             visible: thing.visible
         }
-        things.push(JSON.stringify(thingie));
+        things.push(thingie);
     }
     return things;
 }
 
 Save.getUpgrades = function() {
-    var upgrades = [];
+    let upgrades = [];
     for (upgrade of Upgrades.upgrades) {
-        var upgradey = {
+        let upgradey = {
             name: upgrade.name,
             owned: upgrade.owned,
             visible: upgrade.visible
         }
-        upgrades.push(JSON.stringify(upgradey));
+        upgrades.push(upgradey);
     }
     return upgrades;
 }
 
 Save.getEconomy = function() {
-    var economy = {
+    let economy = {
         titles: Economy.titles,
         totalTitles: Economy.totalTitles
     }
     return economy;
+}
+
+Save.makeSave = function() {
+    let save = {
+        things: Save.getThings(),
+        upgrades: Save.getUpgrades(),
+        economy: Save.getEconomy(),
+    };
+
+    return save;
+}
+
+Save.getSave = function() {
+    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+
+    console.log("Here is your save: " + saveStr);
+}
+
+Save.save = function() {
+    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+
+    localStorage.setItem('save', saveStr);
+
+    UI.Notify("Saved!", "Your progress should be saved :3", true, 1);
+}
+
+Save.deleteSave = function() {
+    localStorage.removeItem('save');
+}
+
+Save.load = function() {
+    let saveStr = Base64.decode(localStorage.getItem('save'));
+    let save = JSON.parse(saveStr);
+
+    for (thing of save.things) {
+        let t = returnByName(Things.things, thing.name)[0];
+        t.amount = thing.amount;
+        t.price = thing.price;
+        t.visible = thing.visible;
+    }
+
+    for (upgrade of save.upgrades) {
+        let u = returnByName(Upgrades.upgrades, upgrade.name)[0];
+        u.owned = upgrade.owned;
+        u.visible = upgrade.visible;
+    }
+
+    Economy.titles = save.economy.titles;
+    Economy.totalTitles = save.economy.totalTitles;
+
+    Market.Update();
+
+    UI.Notify("Loaded!", "Your progress should be loaded :3", true, 1);
 }
 
 
@@ -96,8 +157,8 @@ UI.TabGroup = function(name, tabs) {
 }
 
 UI.TabGroup.prototype.ToggleTab = function(tabContent, ev) {
-    var tabEl;
-    var tabBut;
+    let tabEl;
+    let tabBut;
 
     if (tabContent != undefined) tabEl = tabContent;
     else tabEl = this.tabs[0].content;
@@ -127,10 +188,80 @@ UI.tabGroupByName = function(name) {
     return returnByName(UI.tabGroups, "Main")[0];
 }
 
+UI.popups = [];
+UI.popupsID = [];
+UI.popCount = 0;
+UI.Popup = function(title, desc, useLifeTime = true, lifeTime = 3) {
+    this.title = title;
+    this.desc = desc;
+    this.lifetime = lifeTime*Game.FPS;
+    this.useLifetime = useLifeTime;
+
+    this.died = false;
+
+    this.popId = UI.popCount;
+    UI.popupsID[this.popId] = this;
+    UI.popCount++;
+
+    UI.popups.unshift(this);
+
+    let popEl = document.createElement('div');
+    popEl.classList.add("popup");
+    popEl.popId = this.popId;
+
+    let popTitle = document.createElement('span');
+    popTitle.classList.add('title', 'bold');
+    popTitle.textContent = this.title;
+    popEl.appendChild(popTitle);
+
+    let popBr = document.createElement('br');
+    popEl.appendChild(popBr);
+
+    let popDesc = document.createElement('span');
+    popDesc.textContent = this.desc;
+    popEl.appendChild(popDesc);
+
+    this.element = popEl;
+
+    this.element.addEventListener('click', function(ev) {
+        console.log(this.popId);
+        UI.popupsID[this.popId].Close();
+    })
+
+    l('popups').appendChild(popEl);
+}
+
+// Unsuprisingly CC code saves the day once again
+UI.Popup.prototype.Close = function() {
+    UI.popups.splice(UI.popups.indexOf(this));
+    UI.popupsID[this.id] = null;
+    l('popups').removeChild(this.element);
+    this.lifetime = 0;
+}
+
+UI.UpdatePopups = function() {
+    
+    if(UI.popups.length <= 0) return;
+
+    for (pop of UI.popups) {
+        if (pop.useLifetime) pop.lifetime -= 1;
+
+        if(pop.lifetime <= 0 || pop.died) {
+            pop.died = true;
+            pop.Close();
+        }
+    }
+}
+
+UI.Notify = function(title, desc, useLifeTime = true, lifeTime = 3) {
+    new UI.Popup(title, desc, useLifeTime, lifeTime);
+}
+
 UI.Init = function () {
     // Main topbar buttons
-    var tabGroupMain = new UI.TabGroup("Main", [
+    let tabGroupMain = new UI.TabGroup("Main", [
         new UI.Tab("Market", "marketTabButton", "marketTabContent"),
+        new UI.Tab("Options", "optionsTabButton", "optionsTabContent"),
         new UI.Tab("Info", "infoTabButton", "infoTabContent"),
     ]);
 
@@ -273,8 +404,8 @@ Things.UpdateGains = function () {
     // Update gains based on upgrades
 
     for (thing of Things.things) {
-        var mult = 1;
-        var baseGain = thing.baseGain;
+        let mult = 1;
+        let baseGain = thing.baseGain;
         for (upgrade of Upgrades.upgrades) {
             if (!upgrade.type == Upgrades.types.Thing || !upgrade.owned) continue;
 
@@ -327,34 +458,34 @@ Market.Create = function () {
 
     l('marketThings').innerHTML = '';
     for (thing of Things.things) {
-        var thingDiv = document.createElement('div')
+        let thingDiv = document.createElement('div')
 
-        var title = document.createElement('div');
+        let title = document.createElement('div');
         title.classList.add("title");
         title.textContent = thing.name;
 
-        var desc = document.createElement('span');
+        let desc = document.createElement('span');
         desc.textContent = thing.desc;
 
-        var seperator = document.createElement('hr');
+        let seperator = document.createElement('hr');
         seperator.classList.add("marketSeperator");
 
-        var seperator2 = document.createElement('hr');
+        let seperator2 = document.createElement('hr');
         seperator2.classList.add("marketSeperator");
 
-        var gain = document.createElement('span');
+        let gain = document.createElement('span');
         gain.id = thing.name + 'Gain';
 
-        var totalGain = document.createElement('span');
+        let totalGain = document.createElement('span');
         totalGain.id = thing.name + 'TotalGain';
 
-        var price = document.createElement('span');
+        let price = document.createElement('span');
         price.id = thing.name + 'Price';
 
-        var owned = document.createElement('span');
+        let owned = document.createElement('span');
         owned.id = thing.name + 'Amount';
 
-        var buyBtn = document.createElement('button');
+        let buyBtn = document.createElement('button');
         buyBtn.textContent = "Buy";
         buyBtn.id = thing.name + 'BuyBtn';
 
@@ -387,7 +518,7 @@ Market.Create = function () {
     }
 
     for (thing of Things.things) {
-        var thingl = l(thing.name + 'BuyBtn');
+        let thingl = l(thing.name + 'BuyBtn');
         thing.l = l("thing" + thing.id);
 
         // idfk orteil is a genius
@@ -397,20 +528,20 @@ Market.Create = function () {
     // Upgrades
     l('marketUpgrades').innerHTML = '';
     for (upgrade of Upgrades.upgrades) {
-        var upgradeDiv = document.createElement('div');
+        let upgradeDiv = document.createElement('div');
 
-        var title = document.createElement('div');
+        let title = document.createElement('div');
         title.classList.add("title");
         title.textContent = upgrade.name;
 
-        var seperator = document.createElement('hr');
+        let seperator = document.createElement('hr');
         seperator.classList.add("marketSeperator");
 
-        var price = document.createElement('div');
+        let price = document.createElement('div');
         price.textContent = "Price: " + upgrade.price.toFixed(2);
         price.id = upgrade.name + 'Price';
 
-        var buyBtn = document.createElement('button');
+        let buyBtn = document.createElement('button');
         buyBtn.textContent = "Buy";
         buyBtn.id = upgrade.name + 'BuyBtn';
 
@@ -426,7 +557,7 @@ Market.Create = function () {
     }
 
     for (upgrade of Upgrades.upgrades) {
-        var upgradel = l(upgrade.name + 'BuyBtn');
+        let upgradel = l(upgrade.name + 'BuyBtn');
         upgrade.l = l("upgrade" + upgrade.id);
 
         upgradel.addEventListener("click", function (b) { return function (e) { Market.ClickBuyUpgrade(b); e.preventDefault(); }; }(upgrade.id));
@@ -454,6 +585,10 @@ Game.Init = function () {
     Game.visible = true;
     Game.ready = 0;
 
+    // TESTING STUFF
+    Game.doLoop = true;
+    Game.doDraw = true;
+
     UI.Init();
     Upgrades.Create();
     Things.Create();
@@ -467,7 +602,11 @@ Game.Init = function () {
     document.addEventListener("visibilitychange", function (ev) {
         if (document.visibilityState === 'hidden') Game.visible = false;
         else Game.visible = true;
-    })
+    });
+
+    Save.load();
+
+    
 }
 
 Game.Load = function () {
@@ -476,7 +615,7 @@ Game.Load = function () {
 
     Game.Click = function (e) {
         if (e) e.preventDefault();
-        var clickAmount = 1;
+        let clickAmount = 1;
         for (up of Upgrades.upgrades) {
             if (!up.type == Upgrades.types.Click || !up.owned) continue;
 
@@ -497,9 +636,9 @@ Game.Load = function () {
         l("tpsCounter").textContent = Economy.TPS.toFixed(2) + " TPS";
 
         for (const thing of Things.things) {
-            var classes = "thing product";
+            let classes = "thing product";
             
-            var prevThingUnlocked;
+            let prevThingUnlocked;
             if (thing.id === 0) prevThingUnlocked = false;
             else prevThingUnlocked = Things.things[thing.id - 1].visible;
 
@@ -519,7 +658,7 @@ Game.Load = function () {
         }
 
         for (const upgrade of Upgrades.upgrades) {
-            var classes = "upgrade";
+            let classes = "upgrade";
             if (Economy.titles >= upgrade.price || upgrade.visible) {
                 classes += " unlocked";
                 upgrade.visible = true;
@@ -531,16 +670,18 @@ Game.Load = function () {
             if (Economy.titles >= upgrade.price) classes += " canBuy";
             upgrade.l.className = classes;
         }
+
+        UI.UpdatePopups();
     }
 
-    var profit = 0;
+    let profit = 0;
     Game.Loop = function () {
         if (document.hidden) Game.visible = false;
         else Game.visible = true;
 
         Time.updateDeltaTime();
 
-        if (Game.visible) Game.Draw();
+        if (Game.visible && Game.doDraw) Game.Draw();
 
         // Calculate Profit
         profit = 0;
@@ -553,7 +694,12 @@ Game.Load = function () {
 
     Game.ready = 1;
 
-    setInterval(function () { Game.Loop() }, 1000 / Game.FPS);
+    UI.Notify("Welcome!", "This version of UIG includes saves. The system may get changed in future and your saves might not work in future versions.\n Click on a popup to close it ;)", false);
+
+    setInterval(function () { if(Game.doLoop) Game.Loop() }, 1000 / Game.FPS);
+    setInterval(function () {
+        Save.save();
+    }, 60*1000);
 }
 window.onload = function () {
     if (!Game.ready) {

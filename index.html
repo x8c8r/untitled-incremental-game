@@ -18,6 +18,7 @@
 
         <div id="topBar">
             <span id="marketTabButton" class="title medium bold menuTitle">Market</span>
+            <span id="optionsTabButton" class="title medium bold menuTitle">Options</span>
             <span id="infoTabButton" class="title medium bold menuTitle">Info</span>
         </div>
         <hr>
@@ -61,22 +62,31 @@
             <div id="infoTabContent" class="menuTab">
                 <div id="infoMenu">
                     <span class="title big bold">Untitled Incremental Clicker</span> <br>
-                    <span>Version 1.1 | Created by x8c8r</span>
+                    <span>Version 1.2 (THE SAVE UPDATE) | Created by x8c8r</span>
 
                     <div>
                         To be added
                         <br><br>
-                        &bull; Saving/Loading <br>
                         &bull; Dark Theme <br>
 
                     </div>
                 </div>
             </div>
 
+            <div id="optionsTabContent" class="menuTab">
+                <div id="optionsMenu">
+                    <span class="title big bold">Saves</span> <br>
+                    <span>Save system is pretty barebones, and might break with further updates. Sorry if that happens...</span> <br>
+                    <button onclick="Save.save()">Save</button>
+                    <button onclick="Save.load()">Load</button>
+                    <button onclick="Save.getSave()">Export (Will print the save in console)</button>
+                </div>
+            </div>
+
         </div>
 
-        <div id="bottomBar">
-        </div>
+        <div id="bottomBar"></div>
+        <div id="popups"></div>
     </div>
 
 
