@@ -94,9 +94,14 @@ Save.save = function() {
 
 Save.deleteSave = function() {
     localStorage.removeItem('save');
+    window.location.reload();
 }
 
 Save.load = function() {
+    if(localStorage.getItem('save') === null) {
+        Save.save();
+        return;
+    }
     let saveStr = Base64.decode(localStorage.getItem('save'));
     let save = JSON.parse(saveStr);
 
