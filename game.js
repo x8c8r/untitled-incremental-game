@@ -116,7 +116,14 @@ Save.load = function(s) {
         return;
     }
 
-    let save = JSON.parse(saveStr);
+    let save; 
+    try {
+        JSON.parse(saveStr);
+    }
+    catch (e) {
+        console.error("An error occured parsing the specified save: " + e);
+        return;
+    }
 
     for (thing of save.things) {
         let t = returnByName(Things.things, thing.name)[0];
@@ -255,7 +262,6 @@ UI.Popup = function(title, desc, useLifeTime = true, lifeTime = 3) {
     this.element = popEl;
 
     this.element.addEventListener('click', function(ev) {
-        console.log(this.popId);
         UI.popupsID[this.popId].Close();
     })
 
