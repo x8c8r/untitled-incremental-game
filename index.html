@@ -86,10 +86,16 @@
                 <div id="optionsMenu">
                     <span class="title big bold">Saves</span> <br>
                     <span>Save system is pretty barebones, and might break with further updates. Sorry if that happens...</span> <br>
-                    <button onclick="Save.save()">Save</button>
-                    <button onclick="Save.load()">Load</button>
-                    <button onclick="Save.getSave()">Export (Will print the save in console)</button>
-                    <button onclick="Save.deleteSave()">Delete</button>
+
+                    <button onclick="Save.save()">Save</button> <br>
+                    <br>
+                    <button onclick="Save.UI.importSave()">Import</button> <br>
+                    <textarea id="saveInput" style="width: 10rem; height: 5rem; resize: none;" placeholder="Input your save" autocomplete="off"></textarea> <br>
+                    <br>
+                    <button onclick="Save.UI.exportSave()">Export</button> <br>
+                    <textarea id="saveOutput" style="width: 10rem; height: 5rem; resize: none;" placeholder="Your save will go here" autocomplete="off" readonly></textarea> <br>
+                    <br>
+                    <button onclick="Save.deleteSave()">Delete</button> <br>
                 </div>
             </div>
 

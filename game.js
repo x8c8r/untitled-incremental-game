@@ -78,10 +78,13 @@ Save.makeSave = function() {
     return save;
 }
 
-Save.getSave = function() {
-    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+Save.init = function() {
+    if(localStorage.getItem('save') === null) {
+        Save.save();
+        return;
+    }
 
-    console.log("Here is your save: " + saveStr);
+    Save.load(localStorage.getItem('save'));
 }
 
 Save.save = function() {
@@ -97,12 +100,22 @@ Save.deleteSave = function() {
     window.location.reload();
 }
 
-Save.load = function() {
-    if(localStorage.getItem('save') === null) {
-        Save.save();
+Save.load = function(s) {
+    let saveStr;
+
+    if (s === undefined) {
+        console.error("Save was not specified!");
         return;
     }
-    let saveStr = Base64.decode(localStorage.getItem('save'));
+
+    try {
+        saveStr = Base64.decode(s);
+    }
+    catch (e) {
+        console.error("An error occured decoding the specified save: " + e);
+        return;
+    }
+
     let save = JSON.parse(saveStr);
 
     for (thing of save.things) {
@@ -126,6 +139,17 @@ Save.load = function() {
     Market.Update();
 
     UI.Notify("Loaded!", "Your progress should be loaded :3", true, 1);
+}
+
+Save.UI = {};
+Save.UI.exportSave = function() {
+    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+    l('saveOutput').value = saveStr;
+}
+
+Save.UI.importSave = function() {
+    let save = l('saveInput').value;
+    Save.load(save);
 }
 
 
@@ -620,7 +644,7 @@ Game.Init = function () {
         else Game.visible = true;
     });
 
-    Save.load();
+    Save.init();
 }
 
 Game.Load = function () {
