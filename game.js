@@ -118,7 +118,7 @@ Save.load = function(s) {
 
     let save; 
     try {
-        JSON.parse(saveStr);
+        save = JSON.parse(saveStr);
     }
     catch (e) {
         console.error("An error occured parsing the specified save: " + e);
