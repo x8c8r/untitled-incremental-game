@@ -136,7 +136,24 @@ Popups
     overflow-y: hidden;
     display: block;
     position: relative;
-    padding-bottom:8px;
+    padding-bottom:0.25rem;
     border: solid black;
     margin: 0.5rem;
+}
+
+.popText {
+    margin: 0rem 0rem 0.25rem 0.25rem;
+}
+
+.popNotice {
+    font-size: 0.75rem;
+    color:rgba(0, 0, 0, 0.5);
+    margin: 0rem 0rem 0.25rem 0.25rem;
+}
+
+/*
+Misc Styles
+*/
+.small {
+    
 }

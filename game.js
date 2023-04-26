@@ -102,7 +102,6 @@ Save.deleteSave = function() {
 
 Save.load = function(s) {
     let saveStr;
-
     if (s === undefined) {
         console.error("Save was not specified!");
         return;
@@ -248,16 +247,21 @@ UI.Popup = function(title, desc, useLifeTime = true, lifeTime = 3) {
     popEl.popId = this.popId;
 
     let popTitle = document.createElement('span');
-    popTitle.classList.add('title', 'bold');
+    popTitle.classList.add("title", "bold", "popText");
     popTitle.textContent = this.title;
     popEl.appendChild(popTitle);
 
-    let popBr = document.createElement('br');
-    popEl.appendChild(popBr);
+    popEl.appendChild(document.createElement('br'));
 
-    let popDesc = document.createElement('span');
+    let popDesc = document.createElement('div');
     popDesc.textContent = this.desc;
+    popDesc.classList.add("popText");
     popEl.appendChild(popDesc);
+
+    let popNotice = document.createElement('span');
+    popNotice.textContent = "Click on the popup to close it";
+    popNotice.classList.add("popNotice", "popText");
+    popEl.appendChild(popNotice);
 
     this.element = popEl;
 
