@@ -81,7 +81,6 @@ SaveSystem.getEconomy = function() {
 SaveSystem.getMisc = function() {
     let misc = {
         savedAt: Time.curTime,
-        gameVersion: Game.version,
         options: Save.options,
         otherData: Save.data
     }
@@ -672,7 +671,7 @@ Game.Init = function () {
     Game.FPS = 60;
     Game.visible = true;
     Game.ready = 0;
-    Game.version = 1.26; // TODO: NEVER FORGET TO UPDATE THIS
+    Game.version = "Beta 1.26"; // TODO: NEVER FORGET TO UPDATE THIS
 
     // TESTING STUFF
     Game.doLoop = true;
