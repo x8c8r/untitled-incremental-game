@@ -21,7 +21,7 @@ function returnById(list, id) {
 let Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=Base64._utf8_encode(r);f<r.length;)e=r.charCodeAt(f++),t=r.charCodeAt(f++),o=r.charCodeAt(f++),a=e>>2,h=(3&e)<<4|t>>4,d=(15&t)<<2|o>>6,C=63&o,isNaN(t)?d=C=64:isNaN(o)&&(C=64),c=c+this._keyStr.charAt(a)+this._keyStr.charAt(h)+this._keyStr.charAt(d)+this._keyStr.charAt(C);return c},decode:function(r){var e,t,o,a,h,d,C,c="",f=0;for(r=r.replace(/[^A-Za-z0-9\+\/\=]/g,"");f<r.length;)a=this._keyStr.indexOf(r.charAt(f++)),h=this._keyStr.indexOf(r.charAt(f++)),d=this._keyStr.indexOf(r.charAt(f++)),C=this._keyStr.indexOf(r.charAt(f++)),e=a<<2|h>>4,t=(15&h)<<4|d>>2,o=(3&d)<<6|C,c+=String.fromCharCode(e),64!=d&&(c+=String.fromCharCode(t)),64!=C&&(c+=String.fromCharCode(o));return Base64._utf8_decode(c)},_utf8_encode:function(r){r=r.replace(/\r\n/g,"\n");for(var e="",t=0;t<r.length;t++){var o=r.charCodeAt(t);o<128?e+=String.fromCharCode(o):o>127&&o<2048?(e+=String.fromCharCode(o>>6|192),e+=String.fromCharCode(63&o|128)):(e+=String.fromCharCode(o>>12|224),e+=String.fromCharCode(o>>6&63|128),e+=String.fromCharCode(63&o|128))}return e},_utf8_decode:function(r){for(var e="",t=0,o=c1=c2=0;t<r.length;)(o=r.charCodeAt(t))<128?(e+=String.fromCharCode(o),t++):o>191&&o<224?(e+=String.fromCharCode((31&o)<<6|63&(c2=r.charCodeAt(t+1))),t+=2):(e+=String.fromCharCode((15&o)<<12|(63&(c2=r.charCodeAt(t+1)))<<6|63&(c3=r.charCodeAt(t+2))),t+=3);return e}};
 
 // Initialize Objects
-let Save = {};
+let SaveSystem = {};
 let UI = {};
 let Time = {};
 let Economy = {};
@@ -33,7 +33,17 @@ let Game = {};
 /*---------
 SAVE
 ---------*/
-Save.getThings = function() {
+let Save = {};
+
+Save.options = {
+    showSaveReminder: true
+}
+
+Save.otherData = {
+    version: Game.version
+}
+
+SaveSystem.getThings = function() {
     let things = [];
     for (thing of Things.things) {
         let thingie = {
@@ -47,7 +57,7 @@ Save.getThings = function() {
     return things;
 }
 
-Save.getUpgrades = function() {
+SaveSystem.getUpgrades = function() {
     let upgrades = [];
     for (upgrade of Upgrades.upgrades) {
         let upgradey = {
@@ -60,7 +70,7 @@ Save.getUpgrades = function() {
     return upgrades;
 }
 
-Save.getEconomy = function() {
+SaveSystem.getEconomy = function() {
     let economy = {
         titles: Economy.titles,
         totalTitles: Economy.totalTitles
@@ -68,39 +78,52 @@ Save.getEconomy = function() {
     return economy;
 }
 
-Save.makeSave = function() {
+SaveSystem.getMisc = function() {
+    let misc = {
+        savedAt: Time.curTime,
+        gameVersion: Game.version,
+        options: Save.options,
+        otherData: Save.data
+    }
+
+    return misc;
+}
+
+SaveSystem.makeSave = function() {
     let save = {
-        things: Save.getThings(),
-        upgrades: Save.getUpgrades(),
-        economy: Save.getEconomy(),
+        things: SaveSystem.getThings(),
+        upgrades: SaveSystem.getUpgrades(),
+        economy: SaveSystem.getEconomy(),
+        misc: SaveSystem.getMisc()
     };
 
     return save;
 }
 
-Save.init = function() {
+SaveSystem.init = function() {
     if(localStorage.getItem('save') === null) {
-        Save.save();
+        SaveSystem.save();
         return;
     }
 
-    Save.load(localStorage.getItem('save'));
+    SaveSystem.load(localStorage.getItem('save'));
 }
 
-Save.save = function() {
-    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+SaveSystem.save = function() {
+    let saveStr = Base64.encode(JSON.stringify(SaveSystem.makeSave()));
 
     localStorage.setItem('save', saveStr);
 
     UI.Notify("Saved!", "Your progress should be saved :3", true, 1);
 }
 
-Save.deleteSave = function() {
+SaveSystem.deleteSave = function() {
     localStorage.removeItem('save');
     window.location.reload();
 }
 
-Save.load = function(s) {
+SaveSystem.load = function(s) {
+    Save = s;
     let saveStr;
     if (s === undefined) {
         console.error("Save was not specified!");
@@ -144,25 +167,28 @@ Save.load = function(s) {
 
     Market.Update();
 
+    if (save.misc !== undefined) {
+        Save.options = save.misc.options;
+    }
+
     UI.Notify("Loaded!", "Your progress should be loaded :3", true, 1);
 }
 
-Save.UI = {};
-Save.UI.exportSave = function() {
-    let saveStr = Base64.encode(JSON.stringify(Save.makeSave()));
+SaveSystem.UI = {};
+SaveSystem.UI.exportSave = function() {
+    let saveStr = Base64.encode(JSON.stringify(SaveSystem.makeSave()));
     l('saveOutput').value = saveStr;
 }
 
-Save.UI.importSave = function() {
+SaveSystem.UI.importSave = function() {
     let save = l('saveInput').value;
-    Save.load(save);
+    SaveSystem.load(save);
 }
 
 
 /*---------
 UI
 ---------*/
-
 UI.tabs = [];
 UI.tabAmount = 0;
 UI.Tab = function(name, buttonId, contentId) {
@@ -228,11 +254,12 @@ UI.tabGroupByName = function(name) {
 UI.popups = [];
 UI.popupsID = [];
 UI.popCount = 0;
-UI.Popup = function(title, desc, useLifeTime = true, lifeTime = 3) {
+UI.Popup = function(title, desc, useLifeTime = true, lifeTime = 3, onClick) {
     this.title = title;
     this.desc = desc;
     this.lifetime = lifeTime*Game.FPS;
     this.useLifetime = useLifeTime;
+    this.onClick = onClick;
 
     this.died = false;
 
@@ -278,6 +305,8 @@ UI.Popup.prototype.Close = function() {
     UI.popupsID[this.id] = null;
     l('popups').removeChild(this.element);
     this.lifetime = 0;
+
+    if(this.onClick !== undefined) this.onClick();
 }
 
 UI.UpdatePopups = function() {
@@ -313,6 +342,12 @@ UI.Init = function () {
     }
 
     tabGroupMain.ToggleTab(); // Make it so all tabs don't get shown at once, and only the first one
+
+    // Visibility detector, dont waste shit on rendering not seen things
+    document.addEventListener("visibilitychange", function (ev) {
+        if (document.visibilityState === 'hidden') Game.visible = false;
+        else Game.visible = true;
+    });
 }
 
 /*---------
@@ -321,6 +356,7 @@ TIME
 
 Time.deltaTime = 0;
 Time.totalTime = 0;
+Time.trueTotalTime = 0;
 Time.curTime = 0;
 Time.lastTime = null;
 
@@ -329,6 +365,7 @@ Time.updateDeltaTime = function () {
     if (Time.lastTime === null) Time.lastTime = Time.curTime;
     Time.deltaTime = (Time.curTime - Time.lastTime) / 1000;
     Time.totalTime += Time.deltaTime;
+    Time.trueTotalTime += Time.curTime - Time.trueTotalTime;
     Time.lastTime = Time.curTime;
 }
 
@@ -352,9 +389,10 @@ Economy.Lose = function (amount) {
 UPGRADES
 ---------*/
 
-Upgrades.upgrades = [];
 Upgrades.amount = 0;
-Upgrades.types = {
+
+Upgrades.upgrades = [];
+Upgrades.upgradeTypes = {
     Click: "Click",
     Thing: "Thing",
 }
@@ -384,11 +422,11 @@ Upgrades.Upgrade = function (name, desc, price, type, visible = false) {
 
 Upgrades.Create = function () {
     // Things
-    new Upgrades.Upgrade('Thinker 2', 'Speeds up Thinkers in 2 times', 250, Upgrades.types.Thing);
+    new Upgrades.Upgrade('Thinker 2', 'Speeds up Thinkers in 2 times', 250, Upgrades.upgradeTypes.Thing);
     // new Upgrades.Upgrade('Dynamic Duo', 'Increases TPS by 1% for every 10 Thinkers', 1000000, Upgrades.types.Thing);
 
     // Clicks
-    new Upgrades.Upgrade('Sheet of 100 existing titles', 'Makes clicking 3 times as effecient', 500, Upgrades.types.Click);
+    new Upgrades.Upgrade('Sheet of 100 existing titles', 'Makes clicking 3 times as effecient', 500, Upgrades.upgradeTypes.Click);
 }
 
 
@@ -451,7 +489,7 @@ Things.UpdateGains = function () {
         let mult = 1;
         let baseGain = thing.baseGain;
         for (upgrade of Upgrades.upgrades) {
-            if (!upgrade.type == Upgrades.types.Thing || !upgrade.owned) continue;
+            if (!upgrade.type == Upgrades.upgradeTypes.Thing || !upgrade.owned) continue;
 
             switch(thing.name) {
                 case "Thinker":
@@ -634,6 +672,7 @@ Game.Init = function () {
     Game.FPS = 60;
     Game.visible = true;
     Game.ready = 0;
+    Game.version = 1.26; // TODO: NEVER FORGET TO UPDATE THIS
 
     // TESTING STUFF
     Game.doLoop = true;
@@ -649,12 +688,7 @@ Game.Init = function () {
     l('clickButton').addEventListener("click", function (ev) { Game.Click(ev); });
     l('clickButton').addEventListener("keydown", function (ev) { if (ev) ev.preventDefault() });
 
-    document.addEventListener("visibilitychange", function (ev) {
-        if (document.visibilityState === 'hidden') Game.visible = false;
-        else Game.visible = true;
-    });
-
-    Save.init();
+    SaveSystem.init();
 }
 
 Game.Load = function () {
@@ -665,7 +699,7 @@ Game.Load = function () {
         if (e) e.preventDefault();
         let clickAmount = 1;
         for (up of Upgrades.upgrades) {
-            if (!up.type == Upgrades.types.Click || !up.owned) continue;
+            if (!up.type == Upgrades.upgradeTypes.Click || !up.owned) continue;
 
             switch (up.name) {
                 case "Sheet of 100 existing titles":
@@ -719,8 +753,16 @@ Game.Load = function () {
             upgrade.l.className = classes;
         }
     }
-
     let profit = 0;
+    Game.CalculateProfit = function() {
+        profit = 0;
+        for (thing of Things.things) {
+            profit += thing.gain * thing.amount;
+        }
+
+        Economy.Earn(profit * Time.deltaTime);
+    }
+
     Game.Loop = function () {
         if (document.hidden) Game.visible = false;
         else Game.visible = true;
@@ -730,23 +772,16 @@ Game.Load = function () {
         if (Game.visible && Game.doDraw) Game.Draw();
 
         // Calculate Profit
-        profit = 0;
-        for (thing of Things.things) {
-            profit += thing.gain * thing.amount;
-        }
-
-        Economy.Earn(profit * Time.deltaTime);
+        Game.CalculateProfit();
 
         UI.UpdatePopups(); // No more popup spam ;3
     }
 
     Game.ready = 1;
 
-    UI.Notify("Welcome!", "This version of UIG includes saves. The system may get changed in future and your saves might not work in future versions.\n Click on a popup to close it ;)", false);
-
     setInterval(function () { if(Game.doLoop) Game.Loop() }, 1000 / Game.FPS);
     setInterval(function () {
-        Save.save();
+        SaveSystem.save();
     }, 60*1000);
 }
 window.onload = function () {

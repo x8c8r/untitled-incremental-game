@@ -62,12 +62,12 @@
             <div id="infoTabContent" class="menuTab">
                 <div id="infoMenu">
                     <span class="title big bold">Untitled Incremental Game</span> <br>
-                    <span>Version 1.25 | Created by x8c8r</span>
+                    <span>Version 1.26 | Created by x8c8r</span>
 
                     <hr>
 
                     <div>
-                        To be added:
+                        <span class="title">To be added</span>
                         <br>
                         &bull; Dark Theme <br>
                     </div>
@@ -79,23 +79,29 @@
                         &bull; zTags - Help with ideas <br>
                         &bull; Orteil - Inspiration <br>
                     </div>
+
+                    <hr>
+
+                    <div>
+                        <button onclick="window.open('https:\/\/x8c8r.github.io/l/discord')">Discord Server</button>
+                    </div>
                 </div>
             </div>
 
             <div id="optionsTabContent" class="menuTab">
                 <div id="optionsMenu">
-                    <span class="title big bold">Saves</span> <br>
+                    <span class="title medium bold">Saves</span> <br>
                     <span>Save system is pretty barebones, and might break with further updates. Sorry if that happens...</span> <br>
 
-                    <button onclick="Save.save()">Save</button> <br>
+                    <button onclick="SaveSystem.save()">Save</button> <br>
                     <br>
-                    <button onclick="Save.UI.importSave()">Import</button> <br>
+                    <button onclick="SaveSystem.UI.importSave()">Import</button> <br>
                     <textarea id="saveInput" style="width: 10rem; height: 5rem; resize: none;" placeholder="Input your save" autocomplete="off"></textarea> <br>
                     <br>
-                    <button onclick="Save.UI.exportSave()">Export</button> <br>
+                    <button onclick="SaveSystem.UI.exportSave()">Export</button> <br>
                     <textarea id="saveOutput" style="width: 10rem; height: 5rem; resize: none;" placeholder="Your save will go here" autocomplete="off" readonly></textarea> <br>
                     <br>
-                    <button onclick="Save.deleteSave()">Delete</button> <br>
+                    <button onclick="SaveSystem.deleteSave()">Delete</button> <br>
                 </div>
             </div>
 
