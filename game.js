@@ -82,7 +82,7 @@ SaveSystem.getMisc = function() {
     let misc = {
         savedAt: Time.curTime,
         options: Save.options,
-        otherData: Save.data
+        otherData: Save.otherData
     }
 
     return misc;
