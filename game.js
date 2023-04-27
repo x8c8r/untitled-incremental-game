@@ -35,12 +35,22 @@ SAVE
 ---------*/
 let Save = {};
 
-Save.options = {
-    showSaveReminder: true
+Save.init = function() {
+    Save.options = {
+        showSaveReminder: true
+    }
+    
+    Save.data = {
+        version: Game.version
+    }
 }
 
-Save.otherData = {
-    version: Game.version
+SaveSystem.getData = function() {
+    return Save.data;
+}
+
+SaveSystem.getOptions = function() {
+    return Save.options;
 }
 
 SaveSystem.getThings = function() {
@@ -78,24 +88,16 @@ SaveSystem.getEconomy = function() {
     return economy;
 }
 
-SaveSystem.getMisc = function() {
-    let misc = {
-        savedAt: Time.curTime,
-        options: Save.options,
-        otherData: Save.otherData
-    }
-
-    return misc;
-}
-
 SaveSystem.makeSave = function() {
     let save = {
+        data: SaveSystem.getData(),
+        options: SaveSystem.getOptions(),
         things: SaveSystem.getThings(),
         upgrades: SaveSystem.getUpgrades(),
         economy: SaveSystem.getEconomy(),
-        misc: SaveSystem.getMisc()
     };
 
+    console.table(save);
     return save;
 }
 
@@ -104,6 +106,8 @@ SaveSystem.init = function() {
         SaveSystem.save();
         return;
     }
+
+    Save.init();
 
     SaveSystem.load(localStorage.getItem('save'));
 }
@@ -145,7 +149,13 @@ SaveSystem.load = function(s) {
         return;
     }
 
-    Save = save;
+    if (save.data !== undefined) {
+        Save.data = save.data;
+    }
+
+    if (save.options !== undefined) {
+        Save.options = save.options;
+    }
 
     for (thing of save.things) {
         let t = returnByName(Things.things, thing.name)[0];
@@ -166,10 +176,6 @@ SaveSystem.load = function(s) {
     Economy.totalTitles = save.economy.totalTitles;
 
     Market.Update();
-
-    if (save.misc !== undefined) {
-        Save.options = save.misc.options;
-    }
 
     UI.Notify("Loaded!", "Your progress should be loaded :3", true, 1);
 }
