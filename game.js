@@ -122,7 +122,6 @@ SaveSystem.deleteSave = function() {
 }
 
 SaveSystem.load = function(s) {
-    Save = s;
     let saveStr;
     if (s === undefined) {
         console.error("Save was not specified!");
@@ -145,6 +144,8 @@ SaveSystem.load = function(s) {
         console.error("An error occured parsing the specified save: " + e);
         return;
     }
+
+    Save = save;
 
     for (thing of save.things) {
         let t = returnByName(Things.things, thing.name)[0];
